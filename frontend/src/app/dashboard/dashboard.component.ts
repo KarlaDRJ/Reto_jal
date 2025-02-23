@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Chart, registerables } from 'chart.js';
+import { Chart, ChartData, ChartOptions,registerables } from 'chart.js';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../auth.service';
@@ -103,6 +103,11 @@ private isNavigationBlocked = false;
         console.log("Respuesta del backend:", response);
         if (response && response.estadisticas) {
           this.estadisticas = response.estadisticas;
+
+          // Calcular la suma total de todos los valores numéricos en estadisticas
+          this.estadisticas.totalSuma = Object.values(this.estadisticas)
+            .filter(value => typeof value === 'number')  // Filtrar solo los números
+            .reduce((sum: number, current: number) => sum + current, 0);
         } else {
           console.warn("No se encontró 'estadisticas' en la respuesta. Usando valores por defecto.");
           this.estadisticas = {
@@ -111,6 +116,8 @@ private isNavigationBlocked = false;
             longitudDelServicio: 0,
             pasajerosTransportados: 0,
             unidadesEnOperacion: 0,
+            totalIngresos: 0,
+            totalSuma: 0,  // Incluir la suma total con valor 0 en caso de error
           };
         }
         this.renderizarGraficas(this.estadisticas);
@@ -123,6 +130,8 @@ private isNavigationBlocked = false;
           longitudDelServicio: 0,
           pasajerosTransportados: 0,
           unidadesEnOperacion: 0,
+          totalIngresos: 0,
+          totalSuma: 0,  // Incluir la suma total con valor 0 en caso de error
         };
       }
     );
@@ -151,30 +160,60 @@ private isNavigationBlocked = false;
     };
 
     // Gráfica: Ingresos por Pasaje (Bar Chart)
-    const ingresosCtx = document.getElementById('ingresosPorPasajeChart') as HTMLCanvasElement;
-    this.chartIngresos = new Chart(ingresosCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Ingresos por pasaje'],
-        datasets: [{
-          label: 'Ingresos por Pasaje',
-          data: [estadisticas.ingresosPorPasaje],
-          backgroundColor: 'rgba(75, 192, 192, 0.5)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        ...commonOptions,
-        plugins: {
-          ...commonOptions.plugins,
-          title: { display: true, text: 'Ingresos por Pasaje' }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
-    });
+    const ingresosCtx = document.getElementById('ingresosPorPasajeChart') as HTMLCanvasElement | null;
+
+if (ingresosCtx && typeof estadisticas.ingresosPorPasaje === 'object' && estadisticas.ingresosPorPasaje !== null) {
+  const labels: string[] = Object.keys(estadisticas.ingresosPorPasaje); // Nombres de los transportes
+  const data: number[] = Object.values(estadisticas.ingresosPorPasaje).map(valor => Number(valor) || 0); // Convierte a números
+
+  // Definir los datos del gráfico
+  const chartData: ChartData<'bar', number[], string> = {
+    labels: labels,
+    datasets: [{
+      label: 'Ingresos por Pasaje',
+      data: data,
+      backgroundColor: [
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(255, 205, 86, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)'
+      ],
+      borderColor: [
+        'rgba(75, 192, 192, 1)',
+        'rgba(255, 99, 132, 1)',
+        'rgba(255, 205, 86, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  // Opciones del gráfico
+  const chartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+      title: { display: true, text: 'Ingresos por Pasaje por Tipo de Transporte' }
+    },
+    scales: {
+      y: { beginAtZero: true }
+    }
+  };
+
+  // Crear el gráfico con tipado correcto
+  this.chartIngresos = new Chart<'bar', number[], string>(ingresosCtx, {
+    type: 'bar',
+    data: chartData,
+    options: chartOptions
+  });
+
+} else {
+  console.error('Error: estadisticas.ingresosPorPasaje no es un objeto válido o el canvas no existe.');
+}
 
     // Gráfica: Kilómetros Recorridos (Line Chart)
     const kmCtx = document.getElementById('kilometrosRecorridosChart') as HTMLCanvasElement;
@@ -250,38 +289,53 @@ private isNavigationBlocked = false;
       }
     });
 
-    // Gráfica Comparativa: Comparativa de Métricas (Line Chart)
-    const comparativaCtx = document.getElementById('comparativaChart') as HTMLCanvasElement;
-    this.chartComparativa = new Chart(comparativaCtx, {
-      type: 'line',
-      data: {
-        labels: ['Ingresos', 'Kilómetros', 'Longitud', 'Pasajeros', 'Unidades'],
-        datasets: [{
-          label: 'Comparativa de Métricas',
-          data: [
-            estadisticas.ingresosPorPasaje,
-            estadisticas.kilometrosRecorridos,
-            estadisticas.longitudDelServicio,
-            estadisticas.pasajerosTransportados,
-            estadisticas.unidadesEnOperacion
-          ],
-          backgroundColor: 'rgba(54, 162, 235, 0.5)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 2,
-          fill: false,
-          tension: 0.1
-        }]
-      },
-      options: {
-        plugins: {
-          ...commonOptions.plugins,
-          ...commonOptions,
-          title: { display: true, text: 'Comparativa de Métricas' }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
-    });
+    const comparativaCtx = document.getElementById('comparativaChart') as HTMLCanvasElement | null;
+
+if (comparativaCtx && estadisticas) {
+  // Convertir los valores de las métricas a números para evitar errores de tipo
+  const data: number[] = [
+    Number(estadisticas.ingresosPorPasaje) || 0,
+    Number(estadisticas.kilometrosRecorridos) || 0,
+    Number(estadisticas.longitudDelServicio) || 0,
+    Number(estadisticas.pasajerosTransportados) || 0,
+    Number(estadisticas.unidadesEnOperacion) || 0
+  ];
+
+  // Datos de la gráfica
+  const chartData: ChartData<'line', number[], string> = {
+    labels: ['Ingresos', 'Kilómetros', 'Longitud', 'Pasajeros', 'Unidades'],
+    datasets: [{
+      label: 'Comparativa de Métricas',
+      data: data,
+      backgroundColor: 'rgba(54, 162, 235, 0.5)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 2,
+      fill: false,
+      tension: 0.1
+    }]
+  };
+
+  // Opciones de la gráfica
+  const chartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+      title: { display: true, text: 'Comparativa de Métricas' }
+    },
+    scales: {
+      y: { beginAtZero: true }
+    }
+  };
+
+  // Crear la gráfica sin errores de tipo
+  this.chartComparativa = new Chart<'line', number[], string>(comparativaCtx, {
+    type: 'line',
+    data: chartData,
+    options: chartOptions
+  });
+
+} else {
+  console.error('Error: No se encontró el canvas comparativaChart o estadisticas no está definido.');
+}
   }
 }

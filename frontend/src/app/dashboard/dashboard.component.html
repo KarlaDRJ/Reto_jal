@@ -45,7 +45,7 @@
   <!-- Estadísticas -->
   <div class="estadisticas-container" *ngIf="estadisticas">
     <div class="estadistica">
-      <strong>Ingresos por Pasaje:</strong> {{ estadisticas?.ingresosPorPasaje }}
+      <strong>Total de todas las estadísticas:</strong> {{ estadisticas?.totalSuma | number:'1.0-0' }}
     </div>
     <div class="estadistica">
       <strong>Kilómetros Recorridos:</strong> {{ estadisticas?.kilometrosRecorridos }}
