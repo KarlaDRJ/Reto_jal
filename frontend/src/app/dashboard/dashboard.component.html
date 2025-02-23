@@ -1,5 +1,82 @@
 <div class="dashboard-container">
+  <div class="button-container">
+    <button (click)="salir()">Salir</button>
+  </div>
+
+  <div class="dashboard-header">
     <h2>Bienvenido al Dashboard</h2>
     <p>¡Has iniciado sesión correctamente!</p>
   </div>
-  
+
+  <!-- Filtros -->
+  <div class="filtros-container">
+    <form [formGroup]="filtroForm" (ngSubmit)="obtenerEstadisticas()">
+      <div class="filtro">
+        <label for="anio">Año</label>
+        <select id="anio" formControlName="anio" type="number" placeholder="Año">
+          <option *ngFor="let anio of [1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]" [value]="anio">{{ anio }}</option>
+        </select>
+      </div>
+      <div class="filtro">
+        <label for="mesInicio">Mes de Inicio</label>
+        <select id="mesInicio" formControlName="mesInicio" type="number" placeholder="Mes de Inicio">
+          <option *ngFor="let mesInicio of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" [value]="mesInicio">{{ mesInicio }}</option>
+        </select>
+      </div>
+
+      <div class="filtro">
+        <label for="mesFin">Mes de Fin</label>
+        <select id="mesFin" formControlName="mesFin" type="number" placeholder="Mes de Fin">
+          <option *ngFor="let mesFin of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" [value]="mesFin">{{ mesFin }}</option>
+        </select>
+      </div>
+
+      <div class="filtro">
+        <label for="transporte">Transporte</label>
+        <select id="transporte" formControlName="transporte">
+          <option value="todos">Todos</option>
+          <option *ngFor="let transporte of transportes" [value]="transporte">{{ transporte }}</option>
+        </select>
+      </div>
+      <button type="submit">Filtrar</button>
+    </form>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="estadisticas-container" *ngIf="estadisticas">
+    <div class="estadistica">
+      <strong>Ingresos por Pasaje:</strong> {{ estadisticas?.ingresosPorPasaje }}
+    </div>
+    <div class="estadistica">
+      <strong>Kilómetros Recorridos:</strong> {{ estadisticas?.kilometrosRecorridos }}
+    </div>
+    <div class="estadistica">
+      <strong>Longitud del Servicio:</strong> {{ estadisticas?.longitudDelServicio }}
+    </div>
+    <div class="estadistica">
+      <strong>Pasajeros Transportados:</strong> {{ estadisticas?.pasajerosTransportados }}
+    </div>
+    <div class="estadistica">
+      <strong>Unidades en Operación:</strong> {{ estadisticas?.unidadesEnOperacion }}
+    </div>
+  </div>
+
+  <!-- Gráficas -->
+  <div class="graficas-container">
+    <div class="grafica">
+      <canvas id="ingresosPorPasajeChart"></canvas>
+    </div>
+    <div class="grafica">
+      <canvas id="kilometrosRecorridosChart"></canvas>
+    </div>
+    <div class="grafica">
+      <canvas id="longitudDelServicioChart"></canvas>
+    </div>
+    <div class="grafica">
+      <canvas id="pasajerosTransportadosChart"></canvas>
+    </div>
+    <div class="grafica">
+      <canvas id="comparativaChart"></canvas>
+    </div>
+  </div>
+</div>

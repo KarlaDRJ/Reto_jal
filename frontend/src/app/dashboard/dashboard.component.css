@@ -1,9 +1,112 @@
+
+
 .dashboard-container {
-    padding: 20px;
-    text-align: center;
-    background-color: #f4f4f4;
-    border-radius: 10px;
-    width: 80%;
-    margin: 20px auto;
-  }
+  border-radius: 10px;
+  border-color: #000;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 40px; 
+}
+.dashboard-header {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  text-align: center;
+  color: #573204;
   
+}
+.filtro{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: #6c7e4a;
+}
+
+.estadisticas-container{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: #c13d21;
+}
+.button-container {
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  margin: 0;
+  padding: 10px;
+  border: 2px solid #c6c481;
+  border-radius: 8px;
+  margin-top: 0;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #7fd120; /* Rojo */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100px; /* Hacemos el botón más pequeño */
+}
+
+button:hover {
+  background-color: #c13d21; /* Rojo más oscuro al pasar el ratón */
+}
+
+.filtros-container {
+  margin-bottom: 40px;
+}
+
+.filtro {
+  margin-bottom: 15px;
+}
+
+.filtro label {
+  display: block;
+  font-weight: bold;
+}
+
+.filtro input,
+.filtro select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.estadisticas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+  
+}
+
+.estadistica {
+  padding: 10px;
+  background-color: #f8eb621a;;
+  border: 1px solid #c6c481;
+  border-radius: 11px;
+}
+
+.graficas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.grafica {
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
+  margin: 0 auto;
+  position: relative;
+  border: 2px solid #f8eb621a;;  
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.grafica canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+.filtros-container{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}

@@ -1,27 +1,52 @@
+/* Contenedor de login */
 .login-container {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    text-align: center;
-  }
+  width: 300px;
+  margin: 10% auto;
+  padding: 50px;
+  border: 2px solid #c6c481;
+  border-radius: 10px;
+  text-align: center;
+  background-color: #f8eb621a;
+}
+h2{
+  color: #573204;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+form{
+  color: #76ae22;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+/* Campos de entrada */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 3px solid #c6c481; 
+  border-radius: 1%;
+  box-sizing: border-box; 
+}
+
+/* Cuando el input tiene enfoque */
+input:focus {
+  border-color: #7fd120; 
+  outline: none; 
+}
+
+/* Botón */
+button {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #7fd120;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
   
-  input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    background-color: #ccc;
-  }
-  
+}
+
+/* Botón deshabilitado */
+button:disabled {
+  background-color: #c6c481;
+  cursor: not-allowed;
+}
