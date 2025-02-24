@@ -96,7 +96,7 @@ private isNavigationBlocked = false;
       paramsObj.transporte = filtros.transporte;
     }
     const params = new HttpParams({ fromObject: paramsObj });
-    const url = 'http://localhost:3000/datos/dashboard';
+    const url = 'https://r1si2jzq87.execute-api.us-east-2.amazonaws.com/trd/otro';
 
     this.http.get<any>(url, { params }).subscribe(
       response => {

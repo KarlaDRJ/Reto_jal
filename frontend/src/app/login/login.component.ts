@@ -27,7 +27,7 @@ export class LoginComponent {
       const loginData = this.loginForm.value;
 
       // Enviar la solicitud POST a la API para la autenticación
-      this.http.post('http://localhost:3000/usuarios/login', loginData)
+      this.http.post('https://r1si2jzq87.execute-api.us-east-2.amazonaws.com/trd/tr', loginData)
         .subscribe(
           (response: any) => {
             // Suponemos que la respuesta contiene un token de autenticación
